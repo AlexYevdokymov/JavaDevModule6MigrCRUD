@@ -1,16 +1,22 @@
 package org.example;
 
+import org.example.client.ClientService;
+import org.example.database.Database;
+import org.example.database.DatabaseMigrationService;
+
 import java.sql.SQLException;
-import java.time.LocalDate;
+
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        DatabasePopulateService databasePopulateService = new DatabasePopulateService();
-
-        databasePopulateService.insertWorker("Tom Jackson",LocalDate.now().minusYears(27),Level.Senior,7240);
-        databasePopulateService.insertClient("Yasin Cengiz");
-        databasePopulateService.insertProject(1,LocalDate.now().minusMonths(15),LocalDate.now().minusMonths(6));
-        databasePopulateService.insertProjectWorker(1,1);
-
+        DatabaseMigrationService.migrate();
+        Database database = Database.getInstance();
+        ClientService clientService = new ClientService(database.getConnection());
+        System.out.println(clientService.listAll());
+//        System.out.println(clientService.create("Alex"));
+//        System.out.println(clientService.getById(4));
+//        clientService.setName(3, "Abra Kadabra");
+//        clientService.deleteById(6);//(клієнти з ID 1-5 пов'язані з проектами тому таким способ їх не видалити)
+//        System.out.println(clientService.listAll());
     }
 }
